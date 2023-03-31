@@ -1,0 +1,128 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "env": {
+      "value": "dev"
+    },
+    "groupName": {
+      "value": "network"
+    },
+    "locationList": {
+      "value": {
+        "northcentralus": "ncenus",
+        "southcentralus": "scenus",
+        "uksouth": "uks",
+        "ukwest": "ukw"
+      }
+    },
+    "tagValues": {
+      "value": {
+        "created by": "pj"
+      }
+    },
+    "HubVNet": {
+      "value": {
+        "vnettype": "hub",
+        "location": "uksouth",
+        "addressPrefixes": [
+          "10.100.0.0/16"
+        ],
+        "dnsServers": [
+            "1.1.1.1",
+            "4.4.4.4"
+        ]
+        
+      }
+    },
+    "HubSubnets": {
+      "value": [
+          {
+            "name": "AzureBastionSubnet",
+            "subnetPrefix": "10.100.200.0/26",
+            "delegation" : "",
+            "privateEndpointNetworkPolicies": "disabled",
+            "serviceEndpoints":[
+                {
+                    "service": "Microsoft.KeyVault",
+                    "locations":[
+                        "*"
+                    ]
+                }
+            ]
+          },
+          {
+            "name": "backend",
+            "subnetPrefix": "10.100.10.0/24",
+            "delegation" : "Microsoft.Web/serverfarms",
+            "privateEndpointNetworkPolicies": "enabled",
+            "serviceEndpoints":[
+                {
+                    "service": "Microsoft.KeyVault",
+                    "locations":[
+                        "*"
+                    ]
+                },
+                {
+                    "service": "Microsoft.Web",
+                    "locations":[
+                        "*"
+                    ]
+                },
+                {
+                    "service": "Microsoft.AzureCosmosDB",
+                    "locations":[
+                        "*"
+                    ]
+                }
+            ]
+          }
+      ]   
+      
+    },
+    "ukwspoke": {
+      "value": {
+        "vnettype": "spoke",
+        "location": "ukwest",
+        "addressPrefixes": [
+          "10.90.0.0/16"
+        ],
+        "dnsServers": [
+          "1.1.1.1",
+          "4.4.4.4"
+        ]
+      
+      }
+    },
+    "ukwspokeSubnets": {
+      "value": [
+        {
+          "name": "backend",
+          "subnetPrefix": "10.90.0.0/24",
+          "delegation" : "Microsoft.Web/serverfarms",
+          "privateEndpointNetworkPolicies": "enabled",
+          "serviceEndpoints":[
+              {
+                  "service": "Microsoft.KeyVault",
+                  "locations":[
+                      "*"
+                  ]
+              },
+              {
+                  "service": "Microsoft.Web",
+                  "locations":[
+                      "*"
+                  ]
+              },
+              {
+                  "service": "Microsoft.AzureCosmosDB",
+                  "locations":[
+                      "*"
+                  ]
+              }
+          ]
+      }
+      ]
+    }
+  }
+}
